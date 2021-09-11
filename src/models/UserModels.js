@@ -66,6 +66,11 @@ class User extends Model {
     hash = hash.digest('hex');
     return { salt, hash }
   };
-}
+
+  async searchById(id) {
+    const user = await User.findByPk(id);
+    return user ? user : false
+  }
+};
 
 module.exports = User;
