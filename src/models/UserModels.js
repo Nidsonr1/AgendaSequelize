@@ -17,6 +17,22 @@ class User extends Model {
     return userAlready;
   };
 
+  async login(data) {
+    const { email, password } = data;
+
+    const checkUser = await this.checkUserAlready(email);
+    if(!checkUser) return;
+
+    const decryptPassword = await this.hash(password, checkUser.dataValues.salt);
+    
+    const user = await User.findOne({ where: {
+      email: data.email,
+      password: decryptPassword.hash
+    } });
+    
+    return user ? user : false
+  }
+
   async register(data) {
     const { name, email, password } = data ;
 
